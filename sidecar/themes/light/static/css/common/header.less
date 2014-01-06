@@ -1,0 +1,41 @@
+.navbar {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: #fff;
+
+    .navbar-brand {
+        color: #222 !important;
+        letter-spacing: 2px;
+        font-size: 20px;
+    }
+
+    .navbar-nav {
+        > li > a {
+            color: #222;
+            &:hover {
+                color: #666;
+            }
+        }
+        > .active > a {
+            background-color: transparent;
+            color: #bd0000;
+            &:hover {
+                background-color: transparent;
+                color: #666;
+            }
+        }
+    }
+
+    .navbar-toggle {
+        border: 0;
+
+        .icon-bar {
+            background-color: #000;
+        }
+
+        &:hover {
+            background-color: #fff !important;
+        }
+    }
+
+}

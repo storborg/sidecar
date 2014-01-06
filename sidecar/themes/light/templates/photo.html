@@ -1,0 +1,125 @@
+<%inherit file="base.html"/>
+
+
+<%namespace name="blocks" file="/common/blocks.html"/>
+
+
+<%def name="title()">${photo.title or "%s - %d" % (photo.collection.title, photo.sequence)}</%def>
+
+
+<%def name="body_class()">${'light' if photo.perfect_background and photo.background_color == 'ffffff' else 'dark'}</%def>
+
+
+<section class="section-photo-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+
+        <h1>${self.title()}</h1>
+
+        % if prev_photo:
+          <div class="pull-left">
+            <a href="${request.route_path('photo', id=prev_photo.id)}">
+              &larr; ${prev_photo.title or prev_photo.sequence}
+            </a>
+          </div>
+        % endif
+
+        % if next_photo:
+          <div class="pull-right">
+            <a href="${request.route_path('photo', id=next_photo.id)}">
+              ${next_photo.title or next_photo.sequence}
+              &rarr;
+            </a>
+          </div>
+        % endif
+
+        <center>
+          In <a href="${request.route_path('collection', path=photo.collection.path)}">${photo.collection.title}</a>
+        </center>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-photo-wide">
+  % if photo.aspect_ratio >= 2.5:
+    ${request.image_tag(photo.name, 'jpg', 'huge', title=photo.title, alt=photo.alt)}
+  % else:
+    <center>
+      <img src="${request.image_url(photo.name, 'jpg', 'large')}" alt="${photo.alt}" title="${photo.title}">
+    </center>
+  % endif
+</section>
+
+
+<section class="section-photo-tags">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+
+        <table class="table-exif">
+
+          <tr>
+            <th>Size</th>
+            <td>
+              ${photo.width} x ${photo.height}
+              <a href="${request.image_url(photo.name, 'jpg', None)}">
+                <i class="fa fa-search"></i>
+                View Original
+              </a>
+            </td>
+          </tr>
+
+          % if photo.camera:
+            <tr>
+              <th>Camera</th>
+              <td>${h.linkify_camera(photo.camera)}</td>
+            </tr>
+          % endif
+
+          % if photo.lens:
+            <tr>
+              <th>Lens</th>
+              <td>${h.linkify_lens(photo.lens)}</td>
+            </tr>
+          % endif
+
+          % if photo.shutter_speed:
+            <tr>
+              <th>Exposure</th>
+              <td>${h.format_shutter_speed(photo.shutter_speed)}</td>
+            </tr>
+          % endif
+
+          % if photo.aperture:
+            <tr>
+              <th>Aperture</th>
+              <td>&fnof;${photo.aperture}</td>
+            </tr>
+          % endif
+
+          % if photo.iso:
+            <tr>
+              <th>ISO</th>
+              <td>${photo.iso}</td>
+            </tr>
+          % endif
+
+          % if photo.location:
+            <tr>
+              <th>Location</th>
+              <td>${photo.location}</td>
+            </tr>
+          % endif
+
+        </table>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+${blocks.licensing(collection)}

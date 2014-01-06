@@ -1,0 +1,40 @@
+<%inherit file="base.html"/>
+
+
+<%namespace name="blocks" file="/common/blocks.html"/>
+
+
+<%def name="title()">${request.registry.settings['sidecar.name']}</%def>
+
+
+<%def name="item(collection)">
+  <div class="collection-summary">
+    <p class="publish-date">${collection.publish_date.strftime('%B %d, %Y')}</p>
+    <h4>
+      <a href="${collection.external_url or collection.path}">${collection.title}</a>
+    </h4>
+    <p>${collection.teaser | n}</p>
+  </div>
+</%def>
+
+
+% if panorama:
+  ${blocks.panorama(panorama)}
+% endif
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+
+      % for collection in collections:
+        ${self.item(collection)}
+      % endfor
+
+      <div class="text-center">
+        <a href="${request.route_path('all')}">View All Pages</a>
+      </div>
+
+    </div>
+  </div>
+</div>

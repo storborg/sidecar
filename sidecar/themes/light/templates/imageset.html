@@ -1,0 +1,36 @@
+<%def name="linked_photo(photo, filter)">
+  <a href="${request.route_path('photo', id=photo.id)}">
+    <img alt="${photo.alt}" title="${photo.title}" src="${request.image_url(photo.name, 'jpg', filter)}">
+  </a>
+</%def>
+
+
+<%def name="imageset_large(images, count)">
+  <div class="imageset imageset-${count} imageset-large">
+    % for photo in images:
+      ${self.linked_photo(photo, 'large')}
+    % endfor
+  </div>
+</%def>
+
+
+<%def name="imageset_columns(images, count, filter, format)">
+  <div class="imageset imageset-${count} imageset-${format}">
+    % for row in h.grouper(4, images):
+      <div class="row">
+        % for photo in row:
+          <div class="col-xs-6 col-sm-3">
+            ${self.linked_photo(photo, filter)}
+          </div>
+        % endfor
+      </div>
+    % endfor
+  </div>
+</%def>
+
+
+% if format == 'large':
+  ${self.imageset_large(images, len(images))}
+% else:
+  ${self.imageset_columns(images, len(images), 'thumb', format)}
+% endif

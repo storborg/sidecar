@@ -1,0 +1,53 @@
+<%inherit file="base.html"/>
+
+
+<%namespace name="forms" file="common/forms.html"/>
+
+
+<section class="admin">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <h2>Collection</h2>
+        <form method="post" action="${request.route_path('admin_collection', action='delete', id=collection.id)}">
+          <button type="submit" class="btn btn-danger btn-xs">
+            Delete This
+          </button>
+        </form>
+
+      </div>
+      <div class="col-md-9">
+        <form method="post" class="form-horizontal">
+          ${forms.ltext(renderer, 'title', collection.title)}
+          ${forms.ltext(renderer, 'external_url', collection.external_url, label='External URL')}
+          ${forms.ltext(renderer, 'path', collection.path)}
+          ${forms.ltextarea(renderer, 'teaser', collection.teaser)}
+          ${forms.ltext(renderer, 'publish_date', collection.publish_date)}
+
+          ${forms.lcheckbox(renderer, 'published', checked=collection.published)}
+          ${forms.lcheckbox(renderer, 'listed', checked=collection.listed)}
+          ${forms.lcheckbox(renderer, 'show_gallery', checked=collection.show_gallery)}
+
+          ${forms.lselect(renderer, 'body_format', collection.body_format, [('md', 'Markdown'), ('html', 'HTML')])}
+          ${forms.ltextarea(renderer, 'body', collection.body, rows=20)}
+
+          <%forms:element label="Photos">
+            <ol>
+              % for photo in collection.photos:
+                <li>
+                  <a href="${request.route_path('admin_photo', action='edit', id=photo.id)}">
+                    ${photo.name}
+                  </a>
+                </li>
+              % endfor
+            </ol>
+          </%forms:element>
+
+          <%forms:element>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </%forms:element>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

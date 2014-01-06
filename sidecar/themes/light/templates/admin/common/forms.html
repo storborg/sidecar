@@ -1,0 +1,166 @@
+<%def name="hint(s)">
+  % if s:
+    <p class="help-block no-error">${s}</p>
+  % endif
+</%def>
+
+
+<%def name="element(renderer=None, label=None, name=None, hint=None)">
+  <div class="form-group ${'has-error' if renderer and renderer.is_error(name) else ''}">
+    % if label or name:
+      ${h.HTML.label(label or h.prettify(name), for_=h._make_safe_id_component(name), class_='control-label col-sm-2')}
+    % endif
+    <div class="col-sm-10 ${'' if (label or name) else 'col-sm-offset-2'}">
+      ${caller.body()}
+      % if renderer and name:
+        ${renderer.errorlist(name)}
+      % endif
+      ${self.hint(hint)}
+    </div>
+  </div>
+</%def>
+
+
+<%def name="addon(s)">${h.HTML.span(s, class_='add-on') if s else ''}</%def>
+
+
+<%def name="lvalue(value=None, label=None, hint=None, **kwargs)">
+  <%self:element label="${label}" hint="${hint}">
+    % if value:
+      ${h.HTML.div(h.literal(value), class_='input-value', **kwargs)}
+    % endif
+    % if hasattr(caller, 'body'):
+      <div class="input-value">
+        ${caller.body()}
+      </div>
+    % endif
+  </%self:element>
+</%def>
+
+
+<%def name="ltext(renderer, name, value=None, label=None, hint=None, prefix=None, suffix=None, **kwargs)">
+  <%self:element renderer="${renderer}" label="${label}" name="${name}" hint="${hint}">
+    <div class="${'input-prepend' if prefix else ''} ${'input-append' if suffix else ''}">
+      ${self.addon(prefix)}
+      % if renderer:
+        ${renderer.text(name, value, class_='form-control', **kwargs)}
+      % else:
+        ${h.text(name, value, class_='form-control', **kwargs)}
+      % endif
+      ${self.addon(suffix)}
+    </div>
+  </%self:element>
+</%def>
+
+
+<%def name="ltextarea(renderer, name, value=None, label=None, hint=None, **kwargs)">
+  <%self:element renderer="${renderer}" label="${label}" name="${name}" hint="${hint}">
+    % if renderer:
+      ${renderer.textarea(name, value, class_='form-control', **kwargs)}
+    % else:
+      ${h.textarea(name, value, class_='form-control', **kwargs)}
+    % endif
+  </%self:element>
+</%def>
+
+
+<%def name="lpassword(renderer, name, value=None, label=None, hint=None, prefix=None, suffix=None, **kwargs)">
+  <%self:element renderer="${renderer}" label="${label}" name="${name}" hint="${hint}">
+    <div class="${'input-prepend' if prefix else ''} ${'input-append' if suffix else ''}">
+      ${self.addon(prefix)}${renderer.password(name, value, class_='form-control', **kwargs)}${self.addon(suffix)}
+    </div>
+  </%self:element>
+</%def>
+
+
+<%def name="lcheckbox(renderer, name, checked=False, label=None, hint=None, **kwargs)">
+  <%self:element renderer="${renderer}" hint="${hint}">
+    <div class="checkbox">
+      <label>
+        % if renderer:
+          ${renderer.checkbox(name, checked=checked, **kwargs)}
+        % else:
+          ${h.checkbox(name, checked=checked, **kwargs)}
+        % endif
+        <span>${label or h.prettify(name)}</span>
+      </label>
+    </div>
+    % if renderer:
+      ${renderer.errorlist(name)}
+    % endif
+  </%self:element>
+</%def>
+
+
+<%def name="lselect(renderer, name, selected, options, label=None, hint=None, **kwargs)">
+  <%self:element renderer="${renderer}" label="${label}" name="${name}" hint="${hint}">
+    % if renderer:
+      ${renderer.select(name, options, selected, class_='form-control', **kwargs)}
+    % else:
+      ${h.select(name, selected, options, class_='form-control', **kwargs)}
+    % endif
+  </%self:element>
+</%def>
+
+
+<%def name="address_fields(renderer, name, a, pickup_only=False, lock_postal_code=None, lock_country=None, required_labels=True)">
+  <div>
+    <%self:element name="${name}first_name" label="Name">
+      % if renderer:
+        ${renderer.text(name + '.first_name', getattr(a, 'first_name', None), class_='form-control', maxlength=50)}
+        ${renderer.text(name + '.last_name', getattr(a, 'last_name', None), class_='form-control', maxlength=50)}
+        ${renderer.errorlist(name + '.first_name')}
+        ${renderer.errorlist(name + '.last_name')}
+      % else:
+        ${h.text(name + '.first_name', getattr(a, 'first_name', None), class_='form-control', maxlength=50)}
+        ${h.text(name + '.last_name', getattr(a, 'last_name', None), class_='form-control', maxlength=50)}
+      % endif
+    </%self:element>
+    ${self.ltext(renderer, name + '.phone', getattr(a, 'phone', None), size='form-control', maxlength=50, label='Daytime Phone')}
+    % if not pickup_only:
+      ${self.ltext(renderer, name + '.company', getattr(a, 'company', None), size='form-control', maxlength=100, label='Company')}
+      <%self:element label="Address" name="${name}address1">
+        % if renderer:
+          ${renderer.text(name + '.address1', getattr(a, 'address1', None), class_='form-control', maxlength=100)}<br>
+          ${renderer.text(name + '.address2', getattr(a, 'address2', None), class_='form-control', maxlength=100)}
+          ${renderer.errorlist(name + '.address1')}
+          ${renderer.errorlist(name + '.address2')}
+        % else:
+          ${h.text(name + '.address1', getattr(a, 'address1', None), class_='form-control', maxlength=100)}<br>
+          ${h.text(name + '.address2', getattr(a, 'address2', None), class_='form-control', maxlength=100)}
+        % endif
+      </%self:element>
+      <%self:element label="City" name="${name}city">
+
+        % if renderer:
+          ${renderer.text(name + '.city', getattr(a, 'city', None), class_='form-control', maxlength=100)}
+          ${renderer.select(name + '.state', h.us_states() + h.us_territories() + h.canada_provinces(), getattr(a, 'state', None), prompt="Select State", class_='form-control')}
+        % else:
+          ${h.text(name + '.city', getattr(a, 'city', None), class_='form-control', maxlength=100)}
+          ${h.select(name + '.state', getattr(a, 'state', None), h.us_states() + h.us_territories() + h.canada_provinces(), prompt="Select State", class_='form-control')}
+        % endif
+
+        % if lock_postal_code:
+          ${self.lvalue(lock_postal_code, 'Postal Code')}
+          ${renderer.hidden('%s.postal_code' % name, lock_postal_code)}
+          <a href="${request.secure_url('cart')}">Change</a>
+        % elif renderer:
+          ${renderer.text(name + '.postal_code', getattr(a, 'postal_code', None), class_='form-control', maxlength=20)}
+        % else:
+          ${h.text(name + '.postal_code', getattr(a, 'postal_code', None), class_='form-control', maxlength=20)}
+        % endif
+
+      </%self:element>
+
+      % if lock_country:
+        ${self.lvalue(dict(h.allowed_countries())[lock_country.lower()], label='Country')}
+        ${renderer.hidden('%s.country' % name, lock_country)}
+      % else:
+        ${self.lselect(renderer, name + '.country', getattr(a, 'country', None), h.allowed_countries(restrict=False), prompt='Select Country', label='Country', size='form-control')}
+      % endif
+
+    % endif
+  </div>
+</%def>
+
+

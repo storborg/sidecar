@@ -1,0 +1,20 @@
+<%inherit file="base.html"/>
+
+
+<%def name="title()">Contact</%def>
+
+
+<section class="section-about">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+
+        <div class="bio">
+          ${request.image_tag(collection.photos[0].name, 'jpg', 'about')}
+          ${collection.render_body(request)}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

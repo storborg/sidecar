@@ -1,0 +1,24 @@
+<%inherit file="base.html"/>
+
+<section class="admin">
+  <div class="container">
+    <div class+"row">
+      <div class="col-md-3">
+        <h2>Collections</h2>
+        <form method="post">
+          <button type="submit" class="btn btn-primary btn-xs">
+            <i class="fa fa-plus"></i>
+            Create New
+          </button>
+        </form>
+      </div>
+      <div class="col-md-9">
+        % for collection in collections:
+          <p>
+            <a href="${request.route_path('admin_collection', action='edit', id=collection.id)}">${collection.title}</a>
+          </p>
+        % endfor
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,41 @@
+<%inherit file="base.html"/>
+
+
+<%namespace name="blocks" file="/common/blocks.html"/>
+
+
+<%def name="title()">${collection.title}</%def>
+
+
+<section class="section-collection">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+        <h1>${collection.title}</h1>
+        <p class="publish-date">${collection.publish_date.strftime('%B %d, %Y')}</p>
+
+        ${collection.render_body(request)}
+
+        % if collection.show_gallery:
+          <div class="imageset imageset-multi">
+            % for row in h.grouper(4, photos):
+              <div class="row">
+                % for photo in row:
+                  <div class="col-xs-6 col-sm-3">
+                    <a href="${request.route_path('photo', id=photo.id)}">
+                      ${request.image_tag(photo.name, 'jpg', 'square')}
+                    </a>
+                  </div>
+                % endfor
+              </div>
+            % endfor
+          </div>
+        % endif
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+${blocks.licensing(collection)}

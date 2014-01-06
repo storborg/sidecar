@@ -1,0 +1,31 @@
+<%inherit file="base.html"/>
+
+
+<%namespace name="forms" file="common/forms.html"/>
+
+
+<section class="admin">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <h2>Photo</h2>
+        <form method="post" action="${request.route_path('admin_photo', action='delete', id=photo.id)}">
+          <button type="submit" class="btn btn-danger btn-xs">
+            Delete This
+          </button>
+        </form>
+
+      </div>
+      <div class="col-md-9">
+        <form method="post" class="form-horizontal">
+          ${forms.lvalue(renderer, 'Filename', photo.name + '.jpg')}
+          ${forms.ltext(renderer, 'title', photo.title)}
+          ${forms.ltext(renderer, 'alt', photo.alt)}
+
+          ${forms.ltext(renderer, 'location', photo.location)}
+          ${forms.ltext(renderer, 'background_color', photo.background_color)}
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

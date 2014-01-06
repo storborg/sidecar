@@ -1,0 +1,5 @@
+include README.rst
+include CHANGES
+include LICENSE
+include *.txt *.ini *.cfg *.rst
+recursive-include sidecar *.ico *.png *.css *.gif *.jpg *.pt *.txt *.mak *.mako *.js *.html *.xml
