@@ -7,7 +7,7 @@ repo_base = os.path.dirname(os.path.dirname(os.path.dirname(__here__)))
 
 
 def includeme(config):
-    config.include('.admin', route_prefix='a')
+    #config.include('.admin', route_prefix='a')
 
     config.add_route('index', '/')
     config.add_view('.index.index_view', route_name='index',
