@@ -24,6 +24,6 @@ def main(global_config, **settings):
     config.include('.views')
 
     config.add_subscriber(add_renderer_globals, BeforeRender)
-    config.scan()
+    #config.scan()
 
     return config.make_wsgi_app()
