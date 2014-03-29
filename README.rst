@@ -26,4 +26,4 @@ Built on:
 License
 =======
 
-Sidecar is not released to the public yet.
+Released under an MIT license. Please see LICENSE for details.
