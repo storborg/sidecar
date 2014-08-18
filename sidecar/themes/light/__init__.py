@@ -1,11 +1,11 @@
 from pyramid_frontend.theme import Theme
 from pyramid_frontend.images import FilterChain
+from pyramid_frontend.assets.less import LessAsset
+from pyramid_frontend.assets.requirejs import RequireJSAsset
 
 
 class LightTheme(Theme):
     key = 'light'
-    require_config_path = '/_light/js/require_config.js'
-    require_base_url = '/_light/js/vendor/'
 
     image_filters = (
         FilterChain(
@@ -30,6 +30,10 @@ class LightTheme(Theme):
     )
 
     assets = {
-        'main-less': ('/_light/css/main.less', 'less'),
-        'main-js': ('/_light/js/main.js', 'requirejs'),
+        'main-less': LessAsset('/_light/css/main.less'),
+        'main-js': RequireJSAsset(
+            '/_light/js/main.js',
+            require_config_path='/_light/js/require_config.js',
+            require_base_url='/_light/js/vendor/',
+        ),
     }
